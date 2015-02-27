@@ -4,6 +4,8 @@ import os
 import sys
 import json
 
+import mxnbtc
+
 from django.conf import settings
 
 DEBUG = os.environ.get('DEBUG','on') == 'on'
@@ -34,15 +36,17 @@ def index(request):
     return HttpResponse("Hello World")
 
 def btcmxn(request):
-    btc = 3000.59
-    mxn = float("{0:.6f}".format(1/3000))
+    btc = mxnbtc.BTCExchange().get_mxn_btc()
+    mxn = mxnbtc.BTCExchange().get_btc_mxn()
+    #btc = 3000.59
+    #mxn = float("{0:.6f}".format(1/3000))
     quote = {"MXN":mxn,"BTC":btc}
     quote_json = json.dumps(quote)
     return HttpResponse(quote_json)
 
 urlpatterns= patterns('',
         url(r'^$', index),
-        url(r'^hello/$', btcmxn),
+        url(r'^exchange/$', btcmxn),
         
         )
 

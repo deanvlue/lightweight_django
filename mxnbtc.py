@@ -3,13 +3,6 @@ from __future__ import division
 import os, sys, json
 import requests
 
-"""
-print "1 Bitcoin es igual a {0} Pesos Mexicanos".format(mxnbtc)
-print "1 Peso Mexicano equivale a {0} Bitcoins, {1} satoshis".format(btcmxn, satoshimxn)
-print "Buy: {0}".format( usdbtc_buy * usdmxn)
-print "Sell: {0}".format( usdbtc_sell * usdmxn)
-print "Last: {0}".format( usdbtc_last * usdmxn)
-"""
 
 class BTCExchange:
 
@@ -33,4 +26,17 @@ class BTCExchange:
             return pesos * self.usdmxn
         else:
             return self.usdmxn
+    
+
+    def get_mxn_btc(self,pesos=0):
+        if pesos != 0:
+            return pesos * self.btcmxn
+        else:
+            return self.btcmxn
+
+    def get_btc_mxn(self,bitcoins=0):
+        if bitcoins != 0:
+            return bitcoins * self.mxnbtc
+        else:
+            return self.mxnbtc
 
