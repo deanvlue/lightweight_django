@@ -34,8 +34,8 @@ def index(request):
     return HttpResponse("Hello World")
 
 def btcmxn(request):
-    btc = 3000
-    mxn = 1/3000
+    btc = 3000.59
+    mxn = float("{0:.6f}".format(1/3000))
     quote = {"MXN":mxn,"BTC":btc}
     quote_json = json.dumps(quote)
     return HttpResponse(quote_json)
