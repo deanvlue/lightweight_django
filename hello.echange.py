@@ -1,11 +1,15 @@
 #!/usr/bin/python
+from __future__ import division
 import os
 import sys
+import json
+
+import mxnbtc
 
 from django.conf import settings
 
 DEBUG = os.environ.get('DEBUG','on') == 'on'
-SECRET_KEY = os.environ.get('SECRET_KEY','{{ secret_key }}')
+SECRET_KEY = os.environ.get('SECRET_KEY', os.urandom(32))
 ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS','localhost').split(',')
 
 
@@ -22,19 +26,29 @@ settings.configure(
             ),
         )
 
-from django.conf.urls import url
-from django.core.wsgi import get_wsgi_application
 from django.http import HttpResponse
+from django.conf.urls import url, patterns
+from django.core.wsgi import get_wsgi_application
 
+application = get_wsgi_application()
 
 def index(request):
     return HttpResponse("Hello World")
 
-urlpatterns= (
-        url(r'^$', index),
-        )
+def btcmxn(request):
+    btc = mxnbtc.BTCExchange().get_mxn_btc()
+    mxn = mxnbtc.BTCExchange().get_btc_mxn()
+    #btc = 3000.59
+    #mxn = float("{0:.6f}".format(1/3000))
+    quote = {"MXN":mxn,"BTC":btc}
+    quote_json = json.dumps(quote)
+    return HttpResponse(quote_json, content_type='application/json')
 
-application = get_wsgi_application()
+urlpatterns= patterns('',
+        url(r'^$', index),
+        url(r'^exchange/$', btcmxn),
+        
+        )
 
 if __name__ == "__main__":
     from django.core.management import execute_from_command_line
